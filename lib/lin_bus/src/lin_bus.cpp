@@ -553,9 +553,11 @@ int LIN::slave_response(byte PID, byte* message, int length, int checksumtype){ 
       }
     }
 
-    if (tmp[1] == PID){
-      write_slave(PID, message, length, checksumtype);
-      return 1;
+    if (tmp[0] == 0x55){
+          if (tmp[1] == PID){
+          write_slave(PID, message, length, checksumtype);
+          return 1;
+          }
     }
     return 0;
   }
