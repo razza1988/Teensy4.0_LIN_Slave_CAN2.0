@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "Teensy4.0_LIN_Slave_CAN2.0",
+			"path": "../../Teensy4.0_LIN_Slave_CAN2.0"
+		},
+		{
+			"name": "Teensy4.0_LIN_Slave_CAN2.0",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
