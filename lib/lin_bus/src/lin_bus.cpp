@@ -522,8 +522,8 @@ int LIN::read(byte PID, byte* data, int length, int checksumtype) {
     return -1;
 }
 
-void LIN::write_slave(byte PID, byte* message, int length, int checksumtype) {
-  byte CRC;
+void LIN::write_slave(byte PID, byte* message, int length, int checksumtype) {                // This has been added to send just the data and checksum of a LIN message.
+  byte CRC;                                                                                   // It is used to reply to the master request of data.
   
   // send_pid = ((PID&0x3F) | (addrParity(PID)<<6));
   
@@ -542,9 +542,9 @@ void LIN::write_slave(byte PID, byte* message, int length, int checksumtype) {
   _stream->flush();
 }
 
-int LIN::slave_response(byte PID, byte* message, int length, int checksumtype){
-    elapsedMicros waiting;
-    byte tmp[2];
+int LIN::slave_response(byte PID, byte* message, int length, int checksumtype){             // This checks the PID of the message being recieved over the LIN Bus.
+    elapsedMicros waiting;                                                                  // If the PID is the one we are looking for we reply to the master with our data.
+    byte tmp[2];  
     uint8_t i = 0;
     while ( i < 2 ) {
       if ( _stream->available() ) {
