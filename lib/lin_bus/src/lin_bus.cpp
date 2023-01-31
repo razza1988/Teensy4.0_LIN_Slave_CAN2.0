@@ -521,3 +521,41 @@ int LIN::read(byte PID, byte* data, int length, int checksumtype) {
   else
     return -1;
 }
+
+void LIN::write_slave(byte PID, byte* message, int length, int checksumtype) {
+  byte CRC;
+  
+  // send_pid = ((PID&0x3F) | (addrParity(PID)<<6));
+  
+  if (checksumtype == 1)
+    CRC = dataChecksum(message, length, 0);
+  else
+    CRC = dataChecksum(message, length, PID);
+  
+  // _stream->write(send_pid);
+  // delayMicroseconds(breakfieldinterbytespace);
+  
+  for (int i = 0; i < length; i++)
+    _stream->write(message[i]);
+  
+  _stream->write(CRC);
+  _stream->flush();
+}
+
+int LIN::slave_response(byte PID, byte* message, int length, int checksumtype){
+    elapsedMicros waiting;
+    byte tmp[2];
+    uint8_t i = 0;
+    while ( i < 2 ) {
+      if ( _stream->available() ) {
+        tmp[i] = _stream->read();
+        i++;
+      }
+    }
+
+    if (tmp[1] == PID){
+      write_slave(PID, message, length, checksumtype);
+      return 1;
+    }
+    return 0;
+  }

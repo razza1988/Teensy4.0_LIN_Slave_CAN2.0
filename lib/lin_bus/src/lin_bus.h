@@ -48,6 +48,7 @@ public:
   LIN(HardwareSerial* stream, uint16_t baudrate, uint8_t break_characters = 13);
   void order(byte PID, byte* message, int length, int checksumtype = 1);
   int response(byte PID, byte* message, int length, int checksumtype = 1);
+  int slave_response(byte PID, byte* message, int length, int checksumtype);
   
 private:
   Stream* _stream;
@@ -60,6 +61,7 @@ private:
   volatile byte dataChecksum (volatile byte* message, int length, uint16_t sum);
   void write(byte PID, byte* message, int length, int checksumtype = 1);
   int read(byte PID, byte message[], int length, int checksumtype = 1);
+  void write_slave(byte PID, byte* message, int length, int checksumtype);
 };
 
 #endif
