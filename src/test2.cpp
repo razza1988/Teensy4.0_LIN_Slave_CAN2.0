@@ -18,6 +18,7 @@ uint8_t pos_3[] = {0x03, 0x0b, 0x13, 0x1b, 0x23, 0x2b, 0x33, 0x3b, 0x43, 0x4b, 0
 uint8_t pos = 0;
 uint8_t current_pos = pos_0[pos];
 
+
 void setup() {
     pinMode(lin_fault, INPUT);
     pinMode(lin_cs, OUTPUT);
@@ -34,17 +35,9 @@ void setup() {
 
 void loop () {
   Serial.println( "Loop Starting");
-  byte tmp[2];  
-  uint8_t i = 0;
-  while (i < 2){
-    if (Serial3.available() > 0){
-
-      Serial.println("LIN Available");
-      tmp[i] = Serial3.read();
-      Serial.print("Byte "); Serial.print(i); Serial.print(":"); Serial.print(tmp[i]);
-      Serial.println();
-      i++;
-    }
+  if (Serial3.available() > 0){
+    Serial3.readStringUntil(' UB');
+    Serial.println( " Found 0x00, 0x55, 0x42");
   }
   Serial.println("Loop Finished");
     // if (msg.buf[7] == 0x00){
