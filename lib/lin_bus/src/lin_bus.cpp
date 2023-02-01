@@ -546,8 +546,8 @@ int LIN::slave_response(byte PID, byte* message, int length, int checksumtype){ 
     elapsedMicros waiting;                                                                  // If the PID is the one we are looking for we reply to the master with our data.
     byte tmp[3];  
     uint8_t i = 0;
-    while ( i < 3 ) {
-      if ( _stream->available() > 0) {
+    if (_stream->available()> 0) {
+      while (i < 3) {
         if (_stream->read() == 0x00){
           tmp[i] = _stream->read();
           i++;
