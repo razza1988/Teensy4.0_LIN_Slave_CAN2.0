@@ -45,7 +45,6 @@ void loop () {
         if (Serial3.read() == 0x00){
             Serial.println( "0x00 Detected");
             while (i > 3){
-
                 tmp[i] = Serial3.read();
                 Serial.print( "Temp Byte in position"); Serial.print(i); Serial.print(" is "); Serial.print(tmp[i]); Serial.println();
                 // Serial.print("Byte "); Serial.print(i); Serial.print(":"); Serial.print(tmp[i]);
@@ -53,18 +52,21 @@ void loop () {
                 i++;
                 // digitalWrite(board_LED, HIGH)
             }
+            if (tmp[1] == 0x55 && tmp[2] == Slave_PID){
+
+                Serial.print("Byte "); Serial.print(0); Serial.print(":"); Serial.print(tmp[0]);
+                Serial.println();
+                Serial.print("Byte "); Serial.print(1); Serial.print(":"); Serial.print(tmp[1]);
+                Serial.println();
+                Serial.print("Byte "); Serial.print(2); Serial.print(":"); Serial.print(tmp[2]);
+                Serial.println();
+                digitalWrite(board_LED, HIGH);
+            }
+    
         }
     }
       
-    if (tmp[1] == 0x55 && tmp[2] == Slave_PID){
-        Serial.print("Byte "); Serial.print(0); Serial.print(":"); Serial.print(tmp[0]);
-        Serial.println();
-        Serial.print("Byte "); Serial.print(1); Serial.print(":"); Serial.print(tmp[1]);
-        Serial.println();
-        Serial.print("Byte "); Serial.print(2); Serial.print(":"); Serial.print(tmp[2]);
-        Serial.println();
-        digitalWrite(board_LED, HIGH);
-    }
+
     
     Serial.println("Loop Finished");
     // if (msg.buf[7] == 0x00){
