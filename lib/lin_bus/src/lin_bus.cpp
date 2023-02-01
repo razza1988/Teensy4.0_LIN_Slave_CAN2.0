@@ -547,8 +547,8 @@ int LIN::slave_response(byte PID, byte* message, int length, int checksumtype){ 
     byte tmp[3];  
     uint8_t i = 0;
     if (_stream->available()> 0) {
-      while (i < 3) {
-        if (_stream->read() == 0x00){
+      if (_stream->read() == 0x00) {
+        while (i < 3){
           tmp[i] = _stream->read();
           i++;
         }
