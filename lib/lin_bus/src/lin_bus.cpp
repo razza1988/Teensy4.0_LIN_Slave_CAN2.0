@@ -542,22 +542,31 @@ void LIN::write_slave(byte PID, byte* message, int length, int checksumtype) {  
   _stream->flush();
 }
 
-int LIN::slave_response(byte PID, byte* message, int length, int checksumtype){             // This checks the PID of the message being recieved over the LIN Bus.
-    elapsedMicros waiting;                                                                  // If the PID is the one we are looking for we reply to the master with our data.
-    byte tmp[3];  
-    uint8_t i = 0;
-    if (_stream->available()> 0) {
-      if (_stream->read() == 0x00) {
-        while (i < 3){
-          tmp[i] = _stream->read();
-          i++;
-        }
-      }
-    }
-    if (tmp[1] == 0x55 && tmp[2] == PID){
-      write_slave(PID, message, length, checksumtype);
-      return 1;
-    }
+// int LIN::slave_response(byte PID, byte* message, int length, int checksumtype){             // This checks the PID of the message being recieved over the LIN Bus.
+//     elapsedMicros waiting;                                                                  // If the PID is the one we are looking for we reply to the master with our data.
+//     byte tmp[3];  
+//     uint8_t i = 0;
+//     if (_stream->available()> 0) {
+//       if (_stream->read() == 0x00) {
+//         while (i < 3){
+//           tmp[i] = _stream->read();
+//           i++;
+//         }
+//       }
+//     }
+//     if (tmp[1] == 0x55 && tmp[2] == PID){
+//       write_slave(PID, message, length, checksumtype);
+//       return 1;
+//     }
     
-    return 0;
-  }
+//     return 0;
+//   }
+int LIN::slave_response(byte PID, byte* message, int length, int checksumtype){             // This checks the PID of the message being recieved over the LIN Bus.
+  if (_stream->available()> 0) {
+    _stream->readStringUntil(' UB');
+    write_slave(PID, message, length, checksumtype);
+    return 1;
+  }      
+    
+  return 0;
+}
