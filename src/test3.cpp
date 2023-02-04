@@ -52,7 +52,7 @@ void loop () {
         i++;
         if (doCheck(data) == 1){
             buffer_data[1] = pos_options[array][pos];
-            lin.slave_response(Slave_PID, buffer_data, 8, lin2x);
+            lin.write_slave(Slave_PID, buffer_data, 8, lin2x);
             pos++;
             if (pos ==15){
                 pos = 0;
