@@ -37,6 +37,9 @@ uint8_t flash_off = 3;
 uint8_t flash_off_count = 0;
 uint8_t number_of_flashes = 5;
 uint8_t flash_count = 0;
+uint8_t indicator_toggle = 8;
+uint8_t indicator_counter_R = 0;
+uint8_t indicator_counter_L = 0;
 
 void setup() {
     pinMode(lin_fault, INPUT);
@@ -141,15 +144,29 @@ void loop () {
         }
 
         // Left Indicator Button 
-        // if (msg.buf[7] == 0x02){
         if (msg.buf[7] & (b1)){
-            // buffer_data[2] = 0x08;
-            buffer_data[2] |= (b3);
+            indicator_counter_L++;
+            if (indicator_counter_L <= indicator_toggle){
+                buffer_data[2] |= (b2);
+                buffer_data[2] &= ~(b3);
+            }
+            if (indicator_counter_L > indicator_toggle){
+                buffer_data[2] &= ~(b2);
+                buffer_data[2] |= (b3);
+            }
+        }
+        else {
+            buffer_data[2] &= ~(b2); 
+            buffer_data[2] &= ~(b3); 
+            indicator_counter_L = 0;
         }
         
         // Wiper Button
         if (msg.buf[7] & (b2)){
             buffer_data[0] |= (b3);
+        }
+        else {
+            buffer_data[0] &= ~(b3);
         }
 
         // Dash Button
@@ -161,7 +178,9 @@ void loop () {
         if (msg.buf[6] & (b0)){
             buffer_data[0] |= (b4);           
         }
-        else buffer_data[0] &= ~(b4);
+        else {
+            buffer_data[0] &= ~(b4);
+        }
 
         // PSL Button
         if (msg.buf[7] & (b7)){
@@ -170,8 +189,24 @@ void loop () {
 
         // Right Indicator Button 
         if (msg.buf[7] & (b6)){
-            buffer_data[2] |= (b1);
+            indicator_counter_R++;
+            if (indicator_counter_R <= indicator_toggle){
+                buffer_data[2] |= (b0);
+                buffer_data[2] &= ~(b1);
+            }
+            if (indicator_counter_R > indicator_toggle){
+                buffer_data[2] &= ~(b0);
+                buffer_data[2] |= (b1);
+            }
         }
+        else {
+            buffer_data[2] &= ~(b0); 
+            buffer_data[2] &= ~(b1); 
+            indicator_counter_R = 0;
+        }
+
+            
+        
 
         // High Button 
         if ((msg.buf[7] & (b5)) ){
@@ -182,30 +217,35 @@ void loop () {
         // Wiper position 0
         if (((msg.buf[0] | ~(b2)) == ~(b2)) && ((msg.buf[0] | ~(b1)) == ~(b1)) && (msg.buf[0] & (b0))){
             array = 0;
-            buffer_data[0] &= ~(b1);
             buffer_data[0] &= ~(b0);
+            buffer_data[0] &= ~(b1);
+            
         }
 
         // Wiper position 1
         if (((msg.buf[0] | ~(b2)) == ~(b2)) && (msg.buf[0] & (b1)) && ((msg.buf[0] | ~(b0)) == ~(b0))){
-            array = 1;
-            buffer_data[0] |= (b1);
-            buffer_data[0] &= ~(b0);
+            array = 3;
+            buffer_data[0] |= (b0);
+            buffer_data[0] &= ~(b1);
+        
+
 
         }
 
         // Wiper position 2
         if (((msg.buf[0] | ~(b2)) == ~(b2)) && (msg.buf[0] & (b1)) && (msg.buf[0] & (b0))){
-            array = 2;
+            array = 3;
+            buffer_data[0] &= ~(b0);
             buffer_data[0] |= (b1);
-            buffer_data[0] |= (b0);
+            
         }
 
         // Wiper position 3
         if ((msg.buf[0] & (b2)) && ((msg.buf[0] | ~(b1)) == ~(b1)) &&  ((msg.buf[0] | ~(b0)) == ~(b0))){
             array = 3;
-            buffer_data[0] |= (b1);
             buffer_data[0] |= (b0);
+            buffer_data[0] |= (b1);
+            
         }
 
         // Dim position 1
